@@ -27,8 +27,8 @@ class Particle{
     context.stroke();
   }
   update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
+    this.x += this.speedX + Math.random()* 15 - 7.5;
+    this.y += this.speedY + Math.random()* 15 - 7.5;
     this.history.push({x: this.x, y: this.y});
   }
 }
