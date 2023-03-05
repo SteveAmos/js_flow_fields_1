@@ -6,7 +6,7 @@ canvas.height = window.innerHeight;
 //canvas settings
 ctx.fillStyle = "#f1f1f1";
 ctx.strokeStyle = '#f1f1f1'
-ctx.lineWidth = 1;
+ctx.lineWidth = 0.5;
 
 class Particle{
   constructor(effect) {
@@ -67,14 +67,20 @@ class Effect{
     this.width = width;
     this.height = height;
     this.particles = [];
-    this.numberOfParticles = 300;
+    this.numberOfParticles = 2000;
     this.cellSize = 20;
     this.rows;
     this.cols;
     this.flowField = [];
-    this.curve = 0.5;
-    this.zoom = 0.12;
+    this.curve = 5;
+    this.zoom = 0.5;
+    this.debug = false;
     this.init();
+
+    window.addEventListener('keydown', e => {
+      console.log(e);
+      if (e.key === 'd') this.debug = !this.debug;
+    });
   }
   init() {
     // create flow field
@@ -93,7 +99,26 @@ class Effect{
       this.particles.push(new Particle(this)); 
     }
   }
+  drawGrid(context){
+    context.save();
+    context.strokeStyle = '#ff3300';
+    context.lineWidth = 0.5;
+    for (let c = 0; c < this.cols; c++) {
+      context.beginPath();
+      context.moveTo(this.cellSize * c, 0);
+      context.lineTo(this.cellSize * c, this.height);
+      context.stroke();
+    }
+    for (let r = 0; r < this.rows; r++) {
+      context.beginPath();
+      context.moveTo(0, this.cellSize * r);
+      context.lineTo(this.width, this.cellSize * r);
+      context.stroke();
+    }
+    context.restore();
+  }
   render(context) {
+    if (this.debug) this.drawGrid(context);
     this.particles.forEach(particle => {
       particle.draw(context);
       particle.update();
